@@ -4,7 +4,7 @@
 
     <groupId>de.fraunhofer.iosb.ilt</groupId>
     <artifactId>Settings</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0</version>
     <packaging>jar</packaging>
 
     <name>Settings</name>
@@ -36,7 +36,7 @@
     <scm>
         <connection>scm:git:git@github.com:hylkevds/Settings.git</connection>
         <developerConnection>scm:git:git@github.com:hylkevds/Settings.git</developerConnection>
-        <tag>HEAD</tag>
+        <tag>v1.0</tag>
         <url>https://github.com/FraunhoferIOSB/Settings</url>
     </scm>
 

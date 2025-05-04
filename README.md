@@ -2,7 +2,29 @@
 
 A library for loading settings from environment variables.
 
-## Core Use
+
+## Using with maven
+
+Add the dependency:
+```xml
+<dependency>
+    <groupId>de.fraunhofer.iosb.ilt</groupId>
+    <artifactId>Settings</artifactId>
+    <version>1.0</version>
+</dependency>
+
+```
+
+
+## Using with gradle
+
+Add the dependency:
+```gradle
+compile 'de.fraunhofer.iosb.ilt:Settings:1.0'
+```
+
+
+## Core Usage
 
 Classes that hold names of environment variables implement the interface `ConfigDefaults`.
 
