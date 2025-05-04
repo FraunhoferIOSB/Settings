@@ -22,6 +22,7 @@
  */
 package de.fraunhofer.iosb.ilt.settings;
 
+import de.fraunhofer.iosb.ilt.settings.annotation.SensitiveValue;
 import de.fraunhofer.iosb.ilt.settings.exceptions.PropertyMissingException;
 import de.fraunhofer.iosb.ilt.settings.exceptions.PropertyTypeException;
 import java.util.Map;
@@ -121,14 +122,33 @@ public class Settings {
         return properties;
     }
 
+    /**
+     * Create a sub-settings, based on this Settings, with the given prefix
+     * appended to the prefix of this Settings.
+     *
+     * @param prefix The prefix to use for the new settings. This is appended to
+     * the prefix of this Settings.
+     * @return A new Settings, with the given prefix appended to the prefix of
+     * this Settings.
+     */
     public Settings getSubSettings(String prefix) {
         return new CachedSettings(this, prefix);
     }
 
+    /**
+     * Get the current setting if sensitive data is logged.
+     *
+     * @return The current setting if sensitive data is logged.
+     */
     public boolean getLogSensitiveData() {
         return logSensitiveData;
     }
 
+    /**
+     * Change the setting if sensitive data is logged.
+     *
+     * @param logSensitiveData if true, sensitive data is logged.
+     */
     public void setLogSensitiveData(boolean logSensitiveData) {
         this.logSensitiveData = logSensitiveData;
     }
@@ -172,23 +192,35 @@ public class Settings {
         throw new PropertyMissingException(key);
     }
 
+    /**
+     * Set the variable with the given name to the given (String) value.
+     *
+     * @param name The name of the variable to set.
+     * @param value The value to set the variable to.
+     */
     public void set(String name, String value) {
         properties.put(getPropertyKey(name), value);
     }
 
+    /**
+     * Set the variable with the given name to the given (boolean) value.
+     *
+     * @param name The name of the variable to set.
+     * @param value The value to set the variable to.
+     */
     public void set(String name, boolean value) {
         properties.put(getPropertyKey(name), Boolean.toString(value));
     }
 
     /**
-     * Get the property with the given name, prefixed with the prefix of this
-     * properties. The value of the property will be logged. Use {@link #getSensitive(String)
-     * } to fetch a sensitive value.
+     * Get the (String) value of the property with the given name, prefixed with
+     * the prefix of this properties. The value of the property will be logged.
+     * Use {@link #getSensitive(String)} to fetch a sensitive value.
      *
      * @param name The name of the property to get. The prefix will be prepended
      * to this name.
      * @return The value of the requested property. Throws a
-     * PropertyMissingException if the property is not found.
+     * {@link PropertyMissingException} if the property is not found.
      */
     public String get(String name) {
         return get(name, false);
@@ -216,9 +248,9 @@ public class Settings {
     }
 
     /**
-     * Get the property with the given name, prefixed with the prefix of this
-     * properties. The value of the property will be logged. Use {@link #getSensitive(String)
-     * } to fetch a sensitive value.
+     * Get the (String) value of the property with the given name, prefixed with
+     * the prefix of this properties. The value of the property will be logged.
+     * Use {@link #getSensitive(String)} to fetch a sensitive value.
      *
      * @param name The name of the property to get. The prefix will be prepended
      * to this name.
@@ -231,8 +263,9 @@ public class Settings {
     }
 
     /**
-     * Get the property with the given name, prefixed with the prefix of this
-     * properties. The value of the property will NOT be logged.
+     * Get the (String) value of the property with the given name, prefixed with
+     * the prefix of this properties. The value of the property will NOT be
+     * logged.
      *
      * @param name The name of the property to get. The prefix will be prepended
      * to this name.
@@ -255,6 +288,18 @@ public class Settings {
         return value;
     }
 
+    /**
+     * Get the (String) value of the property with the given name, using the
+     * given ConfigDefaults to provide a default value and the sensitivity flag.
+     * The value of the property will be logged unless it is annotated with
+     * {@link SensitiveValue}
+     *
+     * @param name The name of the property to fetch.
+     * @param defaultsProvider The ConfigDefaults to use for supplying a default
+     * value if the property is not set and for supplying the sensitivity flag.
+     * @return The set value of the property, or the value provided by the
+     * defaultsProvider if the property is not set.
+     */
     public String get(String name, Class<? extends ConfigDefaults> defaultsProvider) {
         final String key = getPropertyKey(name);
         final String value = properties.getProperty(key);
@@ -268,14 +313,39 @@ public class Settings {
         return value;
     }
 
+    /**
+     * Get the (int) value of the property with the given name, prefixed with
+     * the prefix of this properties. The value of the property will be logged.
+     * Use {@link #getSensitive(String)} to fetch a sensitive value.
+     *
+     * @param name The name of the property to get. The prefix will be prepended
+     * to this name.
+     * @return The value of the requested property. Throws a
+     * {@link PropertyMissingException} if the property is not found.
+     */
     public int getInt(String name) {
+        return getInt(name, false);
+    }
+
+    private int getInt(String name, boolean sensitive) {
         try {
-            return Integer.parseInt(get(name));
+            return Integer.parseInt(get(name, sensitive));
         } catch (NumberFormatException ex) {
             throw new PropertyTypeException(name, Integer.class, ex);
         }
     }
 
+    /**
+     * Get the (int) value of the property with the given name, prefixed with
+     * the prefix of this properties. The value of the property will be logged.
+     * Use {@link #getSensitive(String)} to fetch a sensitive value.
+     *
+     * @param name The name of the property to get. The prefix will be prepended
+     * to this name.
+     * @param defaultValue The default value to use when the property is not
+     * set.
+     * @return The value of the requested property.
+     */
     public int getInt(String name, int defaultValue) {
         if (containsName(name)) {
             try {
@@ -288,27 +358,65 @@ public class Settings {
         return defaultValue;
     }
 
+    /**
+     * Get the (int) value of the property with the given name, using the given
+     * ConfigDefaults to provide a default value and the sensitivity flag. The
+     * value of the property will be logged unless it is annotated with
+     * {@link SensitiveValue}
+     *
+     * @param name The name of the property to fetch.
+     * @param defaultsProvider The ConfigDefaults to use for supplying a default
+     * value if the property is not set and for supplying the sensitivity flag.
+     * @return The set value of the property, or the value provided by the
+     * defaultsProvider if the property is not set.
+     */
     public int getInt(String name, Class<? extends ConfigDefaults> defaultsProvider) {
+        final boolean sensitive = ConfigUtils.isSensitive(defaultsProvider, name);
         if (containsName(name)) {
             try {
-                return getInt(name);
+                return getInt(name, sensitive);
             } catch (Exception ex) {
                 LOGGER.trace(ERROR_GETTING_SETTINGS_VALUE, ex);
             }
         }
         int defaultValue = ConfigUtils.getDefaultValueInt(defaultsProvider, name);
-        LOGGER.info(NOT_SET_USING_DEFAULT_VALUE, prefix, name, defaultValue);
+        logDefaultValue(name, Integer.toString(defaultValue), sensitive);
         return defaultValue;
     }
 
+    /**
+     * Get the (long) value of the property with the given name, prefixed with
+     * the prefix of this properties. The value of the property will be logged.
+     * Use {@link #getSensitive(String)} to fetch a sensitive value.
+     *
+     * @param name The name of the property to get. The prefix will be prepended
+     * to this name.
+     * @return The value of the requested property. Throws a
+     * {@link PropertyMissingException} if the property is not found.
+     */
     public long getLong(String name) {
+        return getLong(name, false);
+    }
+
+    private long getLong(String name, boolean sensitive) {
         try {
-            return Long.parseLong(get(name));
+            return Long.parseLong(get(name, sensitive));
         } catch (NumberFormatException ex) {
             throw new PropertyTypeException(name, Long.class, ex);
         }
     }
 
+    /**
+     * Get the (long) value of the property with the given name, prefixed with
+     * the prefix of this properties. The value of the property will be logged.
+     * Use {@link #getSensitive(String)} to fetch a sensitive value.
+     *
+     * @param name The name of the property to get. The prefix will be prepended
+     * to this name.
+     * @param defaultValue The default value to use when the property is not
+     * set.
+     * @return The value of the requested property.
+     */
     public long getLong(String name, long defaultValue) {
         if (containsName(name)) {
             try {
@@ -321,28 +429,66 @@ public class Settings {
         return defaultValue;
     }
 
+    /**
+     * Get the (long) value of the property with the given name, using the given
+     * ConfigDefaults to provide a default value and the sensitivity flag. The
+     * value of the property will be logged unless it is annotated with
+     * {@link SensitiveValue}
+     *
+     * @param name The name of the property to fetch.
+     * @param defaultsProvider The ConfigDefaults to use for supplying a default
+     * value if the property is not set and for supplying the sensitivity flag.
+     * @return The set value of the property, or the value provided by the
+     * defaultsProvider if the property is not set.
+     */
     public long getLong(String name, Class<? extends ConfigDefaults> defaultsProvider) {
+        final boolean sensitive = ConfigUtils.isSensitive(defaultsProvider, name);
         if (containsName(name)) {
             try {
-                return getLong(name);
+                return getLong(name, sensitive);
             } catch (Exception ex) {
                 LOGGER.trace(ERROR_GETTING_SETTINGS_VALUE, ex);
             }
         }
         int defaultValue = ConfigUtils.getDefaultValueInt(defaultsProvider, name);
-        LOGGER.info(NOT_SET_USING_DEFAULT_VALUE, prefix, name, defaultValue);
+        logDefaultValue(name, Long.toString(defaultValue), sensitive);
         return defaultValue;
 
     }
 
+    /**
+     * Get the (double) value of the property with the given name, prefixed with
+     * the prefix of this properties. The value of the property will be logged.
+     * Use {@link #getSensitive(String)} to fetch a sensitive value.
+     *
+     * @param name The name of the property to get. The prefix will be prepended
+     * to this name.
+     * @return The value of the requested property. Throws a
+     * {@link PropertyMissingException} if the property is not found.
+     */
     public double getDouble(String name) {
+        return getDouble(name, false);
+    }
+
+    private double getDouble(String name, boolean sensitive) {
         try {
-            return Double.parseDouble(get(name));
+            return Double.parseDouble(get(name, sensitive));
         } catch (NumberFormatException ex) {
             throw new PropertyTypeException(name, Double.class, ex);
         }
     }
 
+    /**
+     * Get the (double) value of the property with the given name, prefixed with
+     * the prefix of this properties. The value of the property will be logged.
+     * Use {@link #getSensitive(String)} to fetch a sensitive value.
+     *
+     * @param name The name of the property to get. The prefix will be prepended
+     * to this name.
+     * @param defaultValue The default value to use when the property is not
+     * set.
+     * @return The value of the requested property.
+     */
     public double getDouble(String name, double defaultValue) {
         if (containsName(name)) {
             try {
@@ -355,23 +501,50 @@ public class Settings {
         return defaultValue;
     }
 
+    /**
+     * Get the (double) value of the property with the given name, using the
+     * given ConfigDefaults to provide a default value and the sensitivity flag.
+     * The value of the property will be logged unless it is annotated with
+     * {@link SensitiveValue}
+     *
+     * @param name The name of the property to fetch.
+     * @param defaultsProvider The ConfigDefaults to use for supplying a default
+     * value if the property is not set and for supplying the sensitivity flag.
+     * @return The set value of the property, or the value provided by the
+     * defaultsProvider if the property is not set.
+     */
     public double getDouble(String name, Class<? extends ConfigDefaults> defaultsProvider) {
+        final boolean sensitive = ConfigUtils.isSensitive(defaultsProvider, name);
         if (containsName(name)) {
             try {
-                return getDouble(name);
+                return getDouble(name, sensitive);
             } catch (Exception ex) {
                 LOGGER.trace(ERROR_GETTING_SETTINGS_VALUE, ex);
             }
         }
         double defaultValue = ConfigUtils.getDefaultValueDouble(defaultsProvider, name);
-        LOGGER.info(NOT_SET_USING_DEFAULT_VALUE, prefix, name, defaultValue);
+        logDefaultValue(name, Double.toString(defaultValue), sensitive);
         return defaultValue;
 
     }
 
+    /**
+     * Get the (boolean) value of the property with the given name, prefixed
+     * with the prefix of this properties. The value of the property will be
+     * logged. Use {@link #getSensitive(String)} to fetch a sensitive value.
+     *
+     * @param name The name of the property to get. The prefix will be prepended
+     * to this name.
+     * @return The value of the requested property. Throws a
+     * {@link PropertyMissingException} if the property is not found.
+     */
     public boolean getBoolean(String name) {
+        return getBooleanPriv(name, false);
+    }
+
+    private boolean getBooleanPriv(String name, boolean sensitive) {
         try {
-            return Boolean.parseBoolean(get(name));
+            return Boolean.parseBoolean(get(name, sensitive));
         } catch (PropertyMissingException ex) {
             throw ex;
         } catch (Exception ex) {
@@ -379,6 +552,17 @@ public class Settings {
         }
     }
 
+    /**
+     * Get the (boolean) value of the property with the given name, prefixed
+     * with the prefix of this properties. The value of the property will be
+     * logged. Use {@link #getSensitive(String)} to fetch a sensitive value.
+     *
+     * @param name The name of the property to get. The prefix will be prepended
+     * to this name.
+     * @param defaultValue The default value to use when the property is not
+     * set.
+     * @return The value of the requested property.
+     */
     public boolean getBoolean(String name, boolean defaultValue) {
         if (containsName(name)) {
             try {
@@ -391,16 +575,29 @@ public class Settings {
         return defaultValue;
     }
 
+    /**
+     * Get the (boolean) value of the property with the given name, using the
+     * given ConfigDefaults to provide a default value and the sensitivity flag.
+     * The value of the property will be logged unless it is annotated with
+     * {@link SensitiveValue}
+     *
+     * @param name The name of the property to fetch.
+     * @param defaultsProvider The ConfigDefaults to use for supplying a default
+     * value if the property is not set and for supplying the sensitivity flag.
+     * @return The set value of the property, or the value provided by the
+     * defaultsProvider if the property is not set.
+     */
     public boolean getBoolean(String name, Class<? extends ConfigDefaults> defaultsProvider) {
+        final boolean sensitive = ConfigUtils.isSensitive(defaultsProvider, name);
         if (containsName(name)) {
             try {
-                return getBoolean(name);
+                return getBoolean(name, sensitive);
             } catch (Exception ex) {
                 LOGGER.trace(ERROR_GETTING_SETTINGS_VALUE, ex);
             }
         }
         boolean defaultValue = ConfigUtils.getDefaultValueBoolean(defaultsProvider, name);
-        LOGGER.info(NOT_SET_USING_DEFAULT_VALUE, prefix, name, defaultValue);
+        logDefaultValue(name, Boolean.toString(defaultValue), sensitive);
         return defaultValue;
     }
 

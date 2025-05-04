@@ -26,6 +26,7 @@ import de.fraunhofer.iosb.ilt.settings.annotation.DefaultValue;
 import de.fraunhofer.iosb.ilt.settings.annotation.DefaultValueBoolean;
 import de.fraunhofer.iosb.ilt.settings.annotation.DefaultValueDouble;
 import de.fraunhofer.iosb.ilt.settings.annotation.DefaultValueInt;
+import de.fraunhofer.iosb.ilt.settings.annotation.SensitiveValue;
 import java.util.Map;
 import java.util.Set;
 
@@ -38,56 +39,62 @@ import java.util.Set;
  */
 public interface ConfigDefaults {
 
-    default boolean isSensitive(String fieldValue) {
-        return ConfigUtils.isSensitive(getClass(), fieldValue);
+    /**
+     * Returns true of the field is annotated with {@link SensitiveValue}.
+     *
+     * @param fieldName The name of the field to check.
+     * @return true if the field is annotated to be sensitive.
+     */
+    default boolean isSensitive(String fieldName) {
+        return ConfigUtils.isSensitive(getClass(), fieldName);
     }
 
     /**
      * Returns the default value of a field annotated with either
      * {@link DefaultValue} or {@link DefaultValueInt}.
      *
-     * @param fieldValue The value of the annotated field
+     * @param fieldName The value of the annotated field
      * @return The default value of the annotated field. If there is no such a
      * field, an IllegalArgumentException is thrown.
      */
-    default String defaultValue(String fieldValue) {
-        return ConfigUtils.getDefaultValue(getClass(), fieldValue);
+    default String defaultValue(String fieldName) {
+        return ConfigUtils.getDefaultValue(getClass(), fieldName);
     }
 
     /**
      * Returns the default value of a field annotated with
      * {@link DefaultValueBoolean}.
      *
-     * @param fieldValue The value of the annotated field
+     * @param fieldName The value of the annotated field
      * @return The default value of the annotated field. If there is no such a
      * field, an IllegalArgumentException is thrown.
      */
-    default boolean defaultValueBoolean(String fieldValue) {
-        return ConfigUtils.getDefaultValueBoolean(getClass(), fieldValue);
+    default boolean defaultValueBoolean(String fieldName) {
+        return ConfigUtils.getDefaultValueBoolean(getClass(), fieldName);
     }
 
     /**
      * Returns the default value of a field annotated with
      * {@link DefaultValueBoolean}.
      *
-     * @param fieldValue The value of the annotated field
+     * @param fieldName The value of the annotated field
      * @return The default value of the annotated field. If there is no such a
      * field, an IllegalArgumentException is thrown.
      */
-    default double defaultValueDouble(String fieldValue) {
-        return ConfigUtils.getDefaultValueDouble(getClass(), fieldValue);
+    default double defaultValueDouble(String fieldName) {
+        return ConfigUtils.getDefaultValueDouble(getClass(), fieldName);
     }
 
     /**
      * Returns the default value of a field annotated with
      * {@link DefaultValueInt}.
      *
-     * @param fieldValue The value of the annotated field
+     * @param fieldName The value of the annotated field
      * @return The default value of the annotated field. If there is no such a
      * field, an IllegalArgumentException is thrown.
      */
-    default int defaultValueInt(String fieldValue) {
-        return ConfigUtils.getDefaultValueInt(getClass(), fieldValue);
+    default int defaultValueInt(String fieldName) {
+        return ConfigUtils.getDefaultValueInt(getClass(), fieldName);
     }
 
     /**

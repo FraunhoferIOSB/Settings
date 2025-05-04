@@ -57,9 +57,12 @@ public class CachedSettings extends Settings {
     }
 
     /**
+     * Creates a new cached settings, based on the parent settings, using the
+     * given prefix.
      *
-     * @param parent
-     * @param prefix
+     * @param parent The parent settings to base on.
+     * @param prefix The prefix to apply to all variable names. This is appended
+     * to the prefix of the parent Settings.
      */
     public CachedSettings(Settings parent, String prefix) {
         super(parent.getProperties(), parent.getPrefix() + prefix, false, parent.getLogSensitiveData());
