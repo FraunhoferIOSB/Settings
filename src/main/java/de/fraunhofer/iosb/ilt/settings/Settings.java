@@ -213,6 +213,16 @@ public class Settings {
     }
 
     /**
+     * Set the variable with the given name to the given (integer) value.
+     *
+     * @param name The name of the variable to set.
+     * @param value The value to set the variable to.
+     */
+    public void set(String name, int value) {
+        properties.put(getPropertyKey(name), Integer.toString(value));
+    }
+
+    /**
      * Get the (String) value of the property with the given name, prefixed with
      * the prefix of this properties. The value of the property will be logged.
      * Use {@link #getSensitive(String)} to fetch a sensitive value.
