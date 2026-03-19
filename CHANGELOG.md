@@ -1,8 +1,10 @@
 # Changelog
 
-## Version 1.1-SNAPSHOT
+## Version 1.1
 
 **Updates**
+* Bumped dependencies.
+* Added unit tests.
 * Added missing set(String, int) method.
 
 
