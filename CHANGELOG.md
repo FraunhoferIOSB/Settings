@@ -1,5 +1,10 @@
 # Changelog
 
+## Version 1.2-SNAPSHOT
+
+**Updates**
+
+
 ## Version 1.1
 
 **Updates**
