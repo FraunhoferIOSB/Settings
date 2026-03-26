@@ -28,7 +28,7 @@ package de.fraunhofer.iosb.ilt.settings;
  *
  * @param <T> The implementing class.
  */
-public abstract class ConfigProvider<T> implements ConfigDefaults {
+public abstract class ConfigProvider<T extends ConfigProvider<T>> implements ConfigDefaults {
 
     private Settings settings;
 
@@ -72,5 +72,7 @@ public abstract class ConfigProvider<T> implements ConfigDefaults {
         return settings.getDouble(name, getClass());
     }
 
-    public abstract T getThis();
+    public T getThis() {
+        return (T) this;
+    }
 }
