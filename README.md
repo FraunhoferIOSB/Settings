@@ -10,7 +10,7 @@ Add the dependency:
 <dependency>
     <groupId>de.fraunhofer.iosb.ilt</groupId>
     <artifactId>Settings</artifactId>
-    <version>1.1</version>
+    <version>1.2</version>
 </dependency>
 
 ```
@@ -20,7 +20,7 @@ Add the dependency:
 
 Add the dependency:
 ```gradle
-compile 'de.fraunhofer.iosb.ilt:Settings:1.1'
+compile 'de.fraunhofer.iosb.ilt:Settings:1.2'
 ```
 
 

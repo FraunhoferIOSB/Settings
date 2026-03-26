@@ -1,6 +1,6 @@
 # Changelog
 
-## Version 1.2-SNAPSHOT
+## Version 1.2
 
 **Updates**
 * Added default getThis implementation to ease extending ConfigProvider.
