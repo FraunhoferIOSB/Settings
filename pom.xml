@@ -60,7 +60,7 @@
         <version.maven.plugin.source>3.4.0</version.maven.plugin.source>
         <version.maven.plugin.spotless>3.4.0</version.maven.plugin.spotless>
 
-        <version.slf4j>2.0.17</version.slf4j>
+        <version.slf4j>2.0.18</version.slf4j>
     </properties>
 
     <dependencies>
